@@ -54,14 +54,32 @@ def callback():
                 city_full_name_2 = city_full_name_2.replace('"', '')
                 country_name = country_dict[city_country]
                 cities.append([city_full_name_2, country_name, local_city_id])
-                print(cities)
+                #print(cities)
 
 
         if (cities != []):
-                for i in range(len(cities)):
-                    new_city_name = Label(city_info_frame, background = '#222222', font=(settings_font, 15 ), text=str(cities[0][0]), fg='#00f3c3')
-                    new_city_name.grid(row=0, column=0)
 
+            def information():
+                print("global value thing")
+            for i in range(len(cities)):
+                print(i)
+                print(str(cities[i][0]))
+                print(str(cities[i][1]))
+                new_city_name = Label(city_info_frame, background = '#222222', font=(settings_font, 15 ), text=str(cities[i][0]), fg='#00f3c3')
+                new_city_name.grid(row=((i*3)+1), column=0)
+
+                country_name = Label(city_info_frame, background = '#222222', font=(settings_font, 15 ), text=str(cities[i][1]), fg='#00f3c3')
+                country_name.grid(row=((i*3)+2), column=0)
+
+                set_city_button = Button(city_info_frame, font=(settings_font, 15 ), text="Set " + str(cities[i][0]), fg='#222222', command=information)
+                set_city_button.grid(row=((i*3)+3), column=0)
+
+
+
+                '''
+                set_city_button = Button(city_info_frame, font=(settings_font, 15 ), text="Set New City", fg='#222222', command=information)
+                set_city_button.grid(row=2, column=0)
+                '''
 
 
                 new_city_name = Label(city_info_frame, background = '#222222', font=(settings_font, 15 ), text=str(cities[0][0]), fg='#00f3c3')
@@ -76,6 +94,7 @@ def callback():
 
                 set_city_button = Button(city_info_frame, font=(settings_font, 15 ), text="Set New City", fg='#222222', command=information)
                 set_city_button.grid(row=2, column=0)
+
 
 
 
