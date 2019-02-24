@@ -23,7 +23,7 @@ from functools import partial
 root = Tk()
 root.wm_geometry("800x435")
 
-self = Frame(root)
+self = Frame(root, background = '#222222')
 self.pack(expand=True, fill='both')
 
 settings_font = "Times"
@@ -58,44 +58,73 @@ def callback():
 
 
         if (cities != []):
+            for widget in city_info_frame.winfo_children():
+                widget.destroy()
+
+            global city_num
+            city_num = 0
 
             def information():
                 print("global value thing")
-            for i in range(len(cities)):
-                print(i)
-                print(str(cities[i][0]))
-                print(str(cities[i][1]))
-                new_city_name = Label(city_info_frame, background = '#222222', font=(settings_font, 15 ), text=str(cities[i][0]), fg='#00f3c3')
-                new_city_name.grid(row=((i*3)+1), column=0)
 
-                country_name = Label(city_info_frame, background = '#222222', font=(settings_font, 15 ), text=str(cities[i][1]), fg='#00f3c3')
-                country_name.grid(row=((i*3)+2), column=0)
+            def move_left(event):
+                global city_num
+                city_num -= 1
+                change_label(city_num)
 
-                set_city_button = Button(city_info_frame, font=(settings_font, 15 ), text="Set " + str(cities[i][0]), fg='#222222', command=information)
-                set_city_button.grid(row=((i*3)+3), column=0)
+            def move_right(event):
+                global city_num
+                city_num += 1
+                change_label(city_num)
 
-
-
-                '''
-                set_city_button = Button(city_info_frame, font=(settings_font, 15 ), text="Set New City", fg='#222222', command=information)
-                set_city_button.grid(row=2, column=0)
-                '''
+            range_label = Label(city_info_frame, background = '#222222', font=(settings_font, 15 ), text="1 of " + str(len(cities)), fg='#00f3c3')
+            range_label.pack(fill='y', side="top")
 
 
-                new_city_name = Label(city_info_frame, background = '#222222', font=(settings_font, 15 ), text=str(cities[0][0]), fg='#00f3c3')
-                new_city_name.grid(row=0, column=0)
-
-                country_name = Label(city_info_frame, background = '#222222', font=(settings_font, 15 ), text=country_name, fg='#00f3c3')
-                country_name.grid(row=1, column=0)
-
-                #information = partial(set_city, {'id':local_city_id,'name':city_full_name_2})
-                def information():
-                    print("global value thing")
-
-                set_city_button = Button(city_info_frame, font=(settings_font, 15 ), text="Set New City", fg='#222222', command=information)
-                set_city_button.grid(row=2, column=0)
+            left_arrow_image = Image.open(BytesIO((get('https://cdn3.iconfinder.com/data/icons/line/36/arrow_left-512.png')).content))
+            wpercent = (30 / float(left_arrow_image.size[0]))
+            hsize = int((float(left_arrow_image.size[1]) * float(wpercent)))
+            left_arrow_image = left_arrow_image.resize((30, hsize), Image.ANTIALIAS)
+            left_arrow_image = ImageTk.PhotoImage(left_arrow_image)
+            left_arrow_label = Label(city_info_frame, image=left_arrow_image, background="#00f3c3")
+            left_arrow_label.bind("<Button-1>", move_left)
+            left_arrow_label.image = left_arrow_image
+            left_arrow_label.pack(side='left', expand=False)
 
 
+            detailed_city_info_frame = Frame(city_info_frame, background = '#222222')
+            detailed_city_info_frame.pack(side='left', fill='y', pady=40)
+
+            new_city_name = Label(detailed_city_info_frame, background = '#222222', font=(settings_font, 15 ), text=str(cities[0][0]), fg='#00f3c3', width = 25)
+            new_city_name.pack(fill='x', padx=10)
+
+            country_name = Label(detailed_city_info_frame, background = '#222222', font=(settings_font, 15 ), text=str(cities[0][1]), fg='#00f3c3')
+            country_name.pack(fill='x', padx=10)
+
+            set_city_button = Button(detailed_city_info_frame, font=(settings_font, 15 ), text="Get Weather", fg='#222222', command=information)
+            set_city_button.pack(fill='x', padx=10)
+
+
+            right_arrow_image = Image.open(BytesIO((get('https://cdn3.iconfinder.com/data/icons/line/36/arrow_right-512.png')).content))
+            wpercent = (30 / float(right_arrow_image.size[0]))
+            hsize = int((float(right_arrow_image.size[1]) * float(wpercent)))
+            right_arrow_image = right_arrow_image.resize((30, hsize), Image.ANTIALIAS)
+
+            #shift_right = partial(move_right, city_num)
+
+            right_arrow_image = ImageTk.PhotoImage(right_arrow_image)
+            right_arrow_label = Label(city_info_frame, image=right_arrow_image, background="#00f3c3")
+            right_arrow_label.bind("<Button-1>", move_right)
+            right_arrow_label.image = right_arrow_image
+            right_arrow_label.pack(side='left', expand=False)
+
+
+
+            def change_label(i):
+                new_city_name.config(text=str(cities[i][0]))
+                country_name.config(text=str(cities[i][1]))
+                #set_city_button.config(text=("Set " + str(cities[i][0])))
+                range_label.config(text=(str(i + 1) + " of " + str(len(cities))))
 
 
 header_frame = Frame(self, background = '#00f3c3')
@@ -105,13 +134,13 @@ header_label = Label(header_frame, text="Settings", fg = "#222222", bg="#00f3c3"
 header_label.pack(fill="both", expand=True)
 
 left_search_frame = Frame(self, background = '#222222')
-left_search_frame.pack(fill="both", expand=False, side='left')
+left_search_frame.pack(fill="both", expand=False, side='left', padx=35, pady=10)
 
-search_frame_label = Label(left_search_frame, background = '#222222', font=(settings_font, header_size - 5 ), text="Change City", fg='#00f3c3')
-search_frame_label.pack(fill='x', expand=False, side="top")
+search_frame_label = Label(left_search_frame, background = '#222222', font=(settings_font, header_size - 5 ), text="Change City", fg='#00f3c3', width = 20)
+search_frame_label.pack(fill='x', expand=False, side="top", pady=10)
 
 search_box = Entry(left_search_frame, textvariable=text_imput, font= (settings_font, 15 ))
-search_box.pack(fill="x", expand=False, side='top')
+search_box.pack(fill="x", expand=False, side='top', pady=5)
 
 search_button = Button(left_search_frame, background = '#222222', font=(settings_font, header_size - 10 ), text="Search", command=callback)
 search_button.pack(fill="x", expand=False, side='top')
@@ -161,6 +190,40 @@ root.mainloop()
 
 
 
+    '''
+    print(i)
+    print(str(cities[i][0]))
+    print(str(cities[i][1]))
+    new_city_name = Label(city_info_frame, background = '#222222', font=(settings_font, 15 ), text=str(cities[i][0]), fg='#00f3c3')
+    new_city_name.grid(row=((i*3)+1), column=0)
+
+    country_name = Label(city_info_frame, background = '#222222', font=(settings_font, 15 ), text=str(cities[i][1]), fg='#00f3c3')
+    country_name.grid(row=((i*3)+2), column=0)
+
+
+    set_city_button = Button(city_info_frame, font=(settings_font, 15 ), text="Set " + str(cities[i][0]), fg='#222222', command=information)
+    set_city_button.grid(row=((i*3)+3), column=0)
+    '''
+
+
+
+    '''
+    set_city_button = Button(city_info_frame, font=(settings_font, 15 ), text="Set New City", fg='#222222', command=information)
+    set_city_button.grid(row=2, column=0)
+
+    new_city_name = Label(city_info_frame, background = '#222222', font=(settings_font, 15 ), text=str(cities[0][0]), fg='#00f3c3')
+    new_city_name.grid(row=0, column=0)
+
+    country_name = Label(city_info_frame, background = '#222222', font=(settings_font, 15 ), text=country_name, fg='#00f3c3')
+    country_name.grid(row=1, column=0)
+
+    #information = partial(set_city, {'id':local_city_id,'name':city_full_name_2})
+    def information():
+        print("global value thing")
+
+    set_city_button = Button(city_info_frame, font=(settings_font, 15 ), text="Set New City", fg='#222222', command=information)
+    set_city_button.grid(row=2, column=0)
+    '''
 
 '''
 root = Tk()

@@ -26,8 +26,6 @@ def set_city(info):
     global city_id
     global city_name
     global location_label_name
-    if (location_label_name) != city_name.title():
-        print("AY")
     city_id = int(info['id'])
     city_name = info['name']
 
@@ -42,7 +40,7 @@ class Page(tk.Frame):
 class Settings(Page):
     def __init__(self, *args, **kwargs):
         Page.__init__(self, *args, **kwargs)
-
+        self.config(background="#222222")
         settings_font = "Times"
         header_size = 35
         text_imput = StringVar()
@@ -71,22 +69,75 @@ class Settings(Page):
                         city_full_name_2 = city_full_name_2.replace('"', '')
                         country_name = country_dict[city_country]
                         cities.append([city_full_name_2, country_name, local_city_id])
-                        print(cities)
 
 
                 if (cities != []):
+                    for widget in city_info_frame.winfo_children():
+                        widget.destroy()
 
-                        new_city_name = Label(city_info_frame, background = '#222222', font=(settings_font, 15 ), text=city_full_name_2, fg='#00f3c3')
-                        new_city_name.grid(row=0, column=0)
+                    global city_num
+                    city_num = 0
 
-                        country_name = Label(city_info_frame, background = '#222222', font=(settings_font, 15 ), text=country_name, fg='#00f3c3')
-                        country_name.grid(row=1, column=0)
+                    def move_left(event):
+                        global city_num
+                        city_num -= 1
+                        change_label(city_num)
 
-                        information = partial(set_city, {'id':local_city_id,'name':city_full_name_2})
+                    def move_right(event):
+                        global city_num
+                        city_num += 1
+                        change_label(city_num)
 
-                        set_city_button = Button(city_info_frame, font=(settings_font, 15 ), text="Set New City", fg='#222222', command=information)
-                        set_city_button.grid(row=2, column=0)
+                    range_label = Label(city_info_frame, background = '#222222', font=(settings_font, 15 ), text="1 of " + str(len(cities)), fg='#00f3c3')
+                    range_label.pack(fill='y', side="top")
 
+
+                    left_arrow_image = Image.open(BytesIO((get('https://cdn3.iconfinder.com/data/icons/line/36/arrow_left-512.png')).content))
+                    wpercent = (30 / float(left_arrow_image.size[0]))
+                    hsize = int((float(left_arrow_image.size[1]) * float(wpercent)))
+                    left_arrow_image = left_arrow_image.resize((30, hsize), Image.ANTIALIAS)
+                    left_arrow_image = ImageTk.PhotoImage(left_arrow_image)
+                    left_arrow_label = Label(city_info_frame, image=left_arrow_image, background="#00f3c3")
+                    left_arrow_label.bind("<Button-1>", move_left)
+                    left_arrow_label.image = left_arrow_image
+                    left_arrow_label.pack(side='left', expand=False)
+
+
+                    detailed_city_info_frame = Frame(city_info_frame, background = '#222222')
+                    detailed_city_info_frame.pack(side='left', fill='y', pady=40)
+
+                    new_city_name = Label(detailed_city_info_frame, background = '#222222', font=(settings_font, 15 ), text=str(cities[0][0]), fg='#00f3c3', width = 25)
+                    new_city_name.pack(fill='x', padx=10)
+
+                    country_name = Label(detailed_city_info_frame, background = '#222222', font=(settings_font, 15 ), text=str(cities[0][1]), fg='#00f3c3')
+                    country_name.pack(fill='x', padx=10)
+
+                    information = partial(set_city, {'id':str(cities[0][2]), 'name': str(cities[0][0])})
+                    set_city_button = Button(detailed_city_info_frame, font=(settings_font, 15 ), text="Get Weather", fg='#222222', command=information)
+                    set_city_button.pack(fill='x', padx=10)
+
+
+                    right_arrow_image = Image.open(BytesIO((get('https://cdn3.iconfinder.com/data/icons/line/36/arrow_right-512.png')).content))
+                    wpercent = (30 / float(right_arrow_image.size[0]))
+                    hsize = int((float(right_arrow_image.size[1]) * float(wpercent)))
+                    right_arrow_image = right_arrow_image.resize((30, hsize), Image.ANTIALIAS)
+
+                    #shift_right = partial(move_right, city_num)
+
+                    right_arrow_image = ImageTk.PhotoImage(right_arrow_image)
+                    right_arrow_label = Label(city_info_frame, image=right_arrow_image, background="#00f3c3")
+                    right_arrow_label.bind("<Button-1>", move_right)
+                    right_arrow_label.image = right_arrow_image
+                    right_arrow_label.pack(side='left', expand=False)
+
+
+
+                    def change_label(i):
+                        new_information = partial(set_city, {'id':str(cities[i][2]), 'name': str(cities[i][0])})
+                        new_city_name.config(text=str(cities[i][0]))
+                        country_name.config(text=str(cities[i][1]))
+                        set_city_button.config(command=new_information)
+                        range_label.config(text=(str(i + 1) + " of " + str(len(cities))))
 
 
         header_frame = Frame(self, background = '#00f3c3')
@@ -96,13 +147,13 @@ class Settings(Page):
         header_label.pack(fill="both", expand=True)
 
         left_search_frame = Frame(self, background = '#222222')
-        left_search_frame.pack(fill="both", expand=False, side='left')
+        left_search_frame.pack(fill="both", expand=False, side='left', padx=35, pady=10)
 
-        search_frame_label = Label(left_search_frame, background = '#222222', font=(settings_font, header_size - 5 ), text="Change City", fg='#00f3c3')
-        search_frame_label.pack(fill='x', expand=False, side="top")
+        search_frame_label = Label(left_search_frame, background = '#222222', font=(settings_font, header_size - 5 ), text="Change City", fg='#00f3c3', width = 20)
+        search_frame_label.pack(fill='x', expand=False, side="top", pady=10)
 
         search_box = Entry(left_search_frame, textvariable=text_imput, font= (settings_font, 15 ))
-        search_box.pack(fill="x", expand=False, side='top')
+        search_box.pack(fill="x", expand=False, side='top', pady=5)
 
         search_button = Button(left_search_frame, background = '#222222', font=(settings_font, header_size - 10 ), text="Search", command=callback)
         search_button.pack(fill="x", expand=False, side='top')
@@ -221,8 +272,6 @@ class Home(Page):
                 day5_icon.config(image=img)
                 day5_icon.image = img
 
-                print(day0_info.DetailedStatus())
-
                 day1_forecast.config(text=day1_info.Forecast().title())
                 day2_forecast.config(text=day2_info.Forecast().title())
                 day3_forecast.config(text=day3_info.Forecast().title())
@@ -261,9 +310,9 @@ class Home(Page):
                 pass
                 super().__init__(api_key, weather_id)
                 self.days_later = days_later
-                self.this_year = time.strftime('%Y')
+                self.this_year = int(time.strftime('%Y'))
                 self.this_month = time.strftime('%m')
-                self.this_day = time.strftime('%d')
+                self.this_day = int(time.strftime('%d'))
                 self.updated_day = int(self.this_day) + int(self.days_later)
 
 
@@ -281,14 +330,14 @@ class Home(Page):
             def Forecast(self):
                 # String for getting forecast
                 # Ex)'2019-02-12 17:00:00+00'
-                days_in_month = monthrange(int(self.this_year), int(self.this_month) )
+                days_in_month = monthrange(int(self.this_year), int(self.this_month))
                 if (int(self.this_day) + int(self.days_later) > days_in_month[1]):
-                    self.this_month += 1
-                    self.updated_day = ((self.this_day + self.days_later) - 31)
-
-                date_string = (str(self.this_year) + '-' + str(self.this_month) + '-' + str(self.updated_day) + ' ' + '12:00:00+00')
+                    self.this_month = int(self.this_month) + 1
+                    self.updated_day = abs((self.this_day + self.days_later) - int(days_in_month[1]))
+                    date_string = (str(self.this_year) + '-'  + "0" + str(self.this_month) + "-" +  "0" + str(self.updated_day) + ' ' + '12:00:00+00')
+                else:
+                    date_string = (str(self.this_year) + '-'  + str(self.this_month) + '-' + str(self.updated_day) + ' ' + '12:00:00+00')
                 # Getting weather info
-
                 forecast=(self.f2).get_weather_at(date_string)
                 # Detailed status for label
                 weather_forecast=forecast.get_detailed_status()
@@ -296,7 +345,13 @@ class Home(Page):
 
             def Path(self):
                 path = 'http://openweathermap.org/img/w/01d.png'
-                date_string = (str(self.this_year) + '-' + str(self.this_month) + '-' + str(self.updated_day) + ' ' + '12:00:00+00')
+                days_in_month = monthrange(int(self.this_year), int(self.this_month))
+                if (int(self.this_day) + int(self.days_later) > days_in_month[1]):
+                    self.this_month = int(self.this_month) + 1
+                    self.updated_day = abs((self.this_day + self.days_later) - int(days_in_month[1]))
+                    date_string = (str(self.this_year) + '-'  + "0" + str(self.this_month) + "-" +  "0" + str(self.updated_day) + ' ' + '12:00:00+00')
+                else:
+                    date_string = (str(self.this_year) + '-'  + str(self.this_month) + '-' + str(self.updated_day) + ' ' + '12:00:00+00')
                 forecast=(self.f2).get_weather_at(date_string)
                 simplified_weather=(forecast.get_status()).lower()
                 weather_icons={"clear": '01d', "few clouds": '02d', "scattered clouds": '03d', "broken clouds": '04d',
@@ -337,7 +392,7 @@ class Home(Page):
                         path = "http://openweathermap.org/img/w/" + code + ".png"
                 return(path)
 
-
+        global city_id
         day0_info = local_weather(weather_id=city_id, api_key=API_key_real)
         day1_info = day_info(API_key_real,city_id, 1)
         day2_info = day_info(API_key_real,city_id, 2)
