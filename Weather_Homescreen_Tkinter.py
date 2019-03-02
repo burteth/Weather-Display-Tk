@@ -19,11 +19,19 @@ from calendar import monthrange
 
 
 global gui_color1
+global gui_color2
 global city_id
-city_id = 5007804
-location_label_name = "Royal Oak"
 global city_num
+global location_label_name
+global OneIsActive
+global TwoIsActive
+gui_color1 = '#00f3c3'
+gui_color2 = '#00b092'
+city_id = 5007804
 city_num = 0
+location_label_name = "Royal Oak"
+OneIsActive = True
+TwoIsActive = False
 
 def set_city(info):
     global city_id
@@ -31,9 +39,7 @@ def set_city(info):
     global location_label_name
     city_id = int(info['id'])
     city_name = info['name']
-def set_color(color):
-    global gui_color1
-
+    location_label_name
 
 class Page(tk.Frame):
     def __init__(self, *args, **kwargs):
@@ -48,7 +54,10 @@ class Settings(Page):
         Page.__init__(self, *args, **kwargs)
         self.config(background="#222222")
 
-        spectrum_size_width, spectrum_size_height = 250, 250  # Size of the Spectrum Canvas
+        global city_num
+        city_num = 0
+
+        spectrum_size_width, spectrum_size_height = 220, 220  # Size of the Spectrum Canvas
         length_away_factor = 2.1  # How far away from the center the oval is
         length_away = spectrum_size_width / length_away_factor
         line_width = 5  # Width of the 1530 lines on the spectrum
@@ -59,11 +68,10 @@ class Settings(Page):
         settings_font = "Times"
         header_size = 35
         text_imput = StringVar()
-        global gui_color1
-        gui_color1 = '#00f3c3'
-        global city_num
-        city_num = 0
         text_imput.set("City Name")
+
+
+
         def callback():
             country_dict = {'AF': 'Afghanistan', 'AX': 'Åland Islands', 'AL': 'Albania', 'DZ': 'Algeria', 'AS': 'American Samoa', 'AD': 'Andorra', 'AO': 'Angola', 'AI': 'Anguilla', 'AQ': 'Antarctica', 'AG': 'Antigua and Barbuda', 'AR': 'Argentina', 'AM': 'Armenia', 'AW': 'Aruba', 'AU': 'Australia', 'AT': 'Austria', 'AZ': 'Azerbaijan', 'BS': 'Bahamas', 'BH': 'Bahrain', 'BD': 'Bangladesh', 'BB': 'Barbados', 'BY': 'Belarus', 'BE': 'Belgium', 'BZ': 'Belize', 'BJ': 'Benin', 'BM': 'Bermuda', 'BT': 'Bhutan', 'BO': 'Bolivia, Plurinational State of', 'BQ': 'Bonaire, Sint Eustatius and Saba', 'BA': 'Bosnia and Herzegovina', 'BW': 'Botswana', 'BV': 'Bouvet Island', 'BR': 'Brazil', 'IO': 'British Indian Ocean Territory', 'BN': 'Brunei Darussalam', 'BG': 'Bulgaria', 'BF': 'Burkina Faso', 'BI': 'Burundi', 'KH': 'Cambodia', 'CM': 'Cameroon', 'CA': 'Canada', 'CV': 'Cape Verde', 'KY': 'Cayman Islands', 'CF': 'Central African Republic', 'TD': 'Chad', 'CL': 'Chile', 'CN': 'China', 'CX': 'Christmas Island', 'CC': 'Cocos (Keeling) Islands', 'CO': 'Colombia', 'KM': 'Comoros', 'CG': 'Congo', 'CD': 'Congo, the Democratic Republic of the', 'CK': 'Cook Islands', 'CR': 'Costa Rica', 'CI': "Côte d'Ivoire", 'HR': 'Croatia', 'CU': 'Cuba', 'CW': 'Curaçao', 'CY': 'Cyprus', 'CZ': 'Czech Republic', 'DK': 'Denmark', 'DJ': 'Djibouti', 'DM': 'Dominica', 'DO': 'Dominican Republic', 'EC': 'Ecuador', 'EG': 'Egypt', 'SV': 'El Salvador', 'GQ': 'Equatorial Guinea', 'ER': 'Eritrea', 'EE': 'Estonia', 'ET': 'Ethiopia', 'FK': 'Falkland Islands (Malvinas)', 'FO': 'Faroe Islands', 'FJ': 'Fiji', 'FI': 'Finland', 'FR': 'France', 'GF': 'French Guiana', 'PF': 'French Polynesia', 'TF': 'French Southern Territories', 'GA': 'Gabon', 'GM': 'Gambia', 'GE': 'Georgia', 'DE': 'Germany', 'GH': 'Ghana', 'GI': 'Gibraltar', 'GR': 'Greece', 'GL': 'Greenland', 'GD': 'Grenada', 'GP': 'Guadeloupe', 'GU': 'Guam', 'GT': 'Guatemala', 'GG': 'Guernsey', 'GN': 'Guinea', 'GW': 'Guinea-Bissau', 'GY': 'Guyana', 'HT': 'Haiti', 'HM': 'Heard Island and McDonald Islands', 'VA': 'Holy See (Vatican City State)', 'HN': 'Honduras', 'HK': 'Hong Kong', 'HU': 'Hungary', 'IS': 'Iceland', 'IN': 'India', 'ID': 'Indonesia', 'IR': 'Iran, Islamic Republic of', 'IQ': 'Iraq', 'IE': 'Ireland', 'IM': 'Isle of Man', 'IL': 'Israel', 'IT': 'Italy', 'JM': 'Jamaica', 'JP': 'Japan', 'JE': 'Jersey', 'JO': 'Jordan', 'KZ': 'Kazakhstan', 'KE': 'Kenya', 'KI': 'Kiribati', 'KP': "Korea, Democratic People's Republic of", 'KR': 'Korea, Republic of', 'KW': 'Kuwait', 'KG': 'Kyrgyzstan', 'LA': "Lao People's Democratic Republic", 'LV': 'Latvia', 'LB': 'Lebanon', 'LS': 'Lesotho', 'LR': 'Liberia', 'LY': 'Libya', 'LI': 'Liechtenstein', 'LT': 'Lithuania', 'LU': 'Luxembourg', 'MO': 'Macao', 'MK': 'Macedonia, the Former Yugoslav Republic of', 'MG': 'Madagascar', 'MW': 'Malawi', 'MY': 'Malaysia', 'MV': 'Maldives', 'ML': 'Mali', 'MT': 'Malta', 'MH': 'Marshall Islands', 'MQ': 'Martinique', 'MR': 'Mauritania', 'MU': 'Mauritius', 'YT': 'Mayotte', 'MX': 'Mexico', 'FM': 'Micronesia, Federated States of', 'MD': 'Moldova, Republic of', 'MC': 'Monaco', 'MN': 'Mongolia', 'ME': 'Montenegro', 'MS': 'Montserrat', 'MA': 'Morocco', 'MZ': 'Mozambique', 'MM': 'Myanmar', 'NA': 'Namibia', 'NR': 'Nauru', 'NP': 'Nepal', 'NL': 'Netherlands', 'NC': 'New Caledonia', 'NZ': 'New Zealand', 'NI': 'Nicaragua', 'NE': 'Niger', 'NG': 'Nigeria', 'NU': 'Niue', 'NF': 'Norfolk Island', 'MP': 'Northern Mariana Islands', 'NO': 'Norway', 'OM': 'Oman', 'PK': 'Pakistan', 'PW': 'Palau', 'PS': 'Palestine, State of', 'PA': 'Panama', 'PG': 'Papua New Guinea', 'PY': 'Paraguay', 'PE': 'Peru', 'PH': 'Philippines', 'PN': 'Pitcairn', 'PL': 'Poland', 'PT': 'Portugal', 'PR': 'Puerto Rico', 'QA': 'Qatar', 'RE': 'Réunion', 'RO': 'Romania', 'RU': 'Russian Federation', 'RW': 'Rwanda', 'BL': 'Saint Barthélemy', 'SH': 'Saint Helena, Ascension and Tristan da Cunha', 'KN': 'Saint Kitts and Nevis', 'LC': 'Saint Lucia', 'MF': 'Saint Martin (French part)', 'PM': 'Saint Pierre and Miquelon', 'VC': 'Saint Vincent and the Grenadines', 'WS': 'Samoa', 'SM': 'San Marino', 'ST': 'Sao Tome and Principe', 'SA': 'Saudi Arabia', 'SN': 'Senegal', 'RS': 'Serbia', 'SC': 'Seychelles', 'SL': 'Sierra Leone', 'SG': 'Singapore', 'SX': 'Sint Maarten (Dutch part)', 'SK': 'Slovakia', 'SI': 'Slovenia', 'SB': 'Solomon Islands', 'SO': 'Somalia', 'ZA': 'South Africa', 'GS': 'South Georgia and the South Sandwich Islands', 'SS': 'South Sudan', 'ES': 'Spain', 'LK': 'Sri Lanka', 'SD': 'Sudan', 'SR': 'Suriname', 'SJ': 'Svalbard and Jan Mayen', 'SZ': 'Swaziland', 'SE': 'Sweden', 'CH': 'Switzerland', 'SY': 'Syrian Arab Republic', 'TW': 'Taiwan, Province of China', 'TJ': 'Tajikistan', 'TZ': 'Tanzania, United Republic of', 'TH': 'Thailand', 'TL': 'Timor-Leste', 'TG': 'Togo', 'TK': 'Tokelau', 'TO': 'Tonga', 'TT': 'Trinidad and Tobago', 'TN': 'Tunisia', 'TR': 'Turkey', 'TM': 'Turkmenistan', 'TC': 'Turks and Caicos Islands', 'TV': 'Tuvalu', 'UG': 'Uganda', 'UA': 'Ukraine', 'AE': 'United Arab Emirates', 'GB': 'United Kingdom', 'US': 'United States', 'UM': 'United States Minor Outlying Islands', 'UY': 'Uruguay', 'UZ': 'Uzbekistan', 'VU': 'Vanuatu', 'VE': 'Venezuela, Bolivarian Republic of', 'VN': 'Viet Nam', 'VG': 'Virgin Islands, British', 'VI': 'Virgin Islands, U.S.', 'WF': 'Wallis and Futuna', 'EH': 'Western Sahara', 'YE': 'Yemen', 'ZM': 'Zambia', 'ZW': 'Zimbabwe'}
             cities = []
@@ -112,7 +120,7 @@ class Settings(Page):
                     global new_city_name
                     global right_arrow_label
 
-                    range_label = Label(city_info_frame, background = '#222222', font=(settings_font, 15 ), text="1 of " + str(len(cities)), fg='#00f3c3')
+                    range_label = Label(city_info_frame, background = '#222222', font=(settings_font, 15 ), text="1 of " + str(len(cities)), fg=gui_color1)
                     range_label.pack(fill='y', side="top")
 
 
@@ -121,7 +129,7 @@ class Settings(Page):
                     hsize = int((float(left_arrow_image.size[1]) * float(wpercent)))
                     left_arrow_image = left_arrow_image.resize((30, hsize), Image.ANTIALIAS)
                     left_arrow_image = ImageTk.PhotoImage(left_arrow_image)
-                    left_arrow_label = Label(city_info_frame, image=left_arrow_image, background="#00f3c3")
+                    left_arrow_label = Label(city_info_frame, image=left_arrow_image, background=gui_color1)
                     left_arrow_label.bind("<Button-1>", move_left)
                     left_arrow_label.image = left_arrow_image
                     left_arrow_label.pack(side='left', expand=False)
@@ -130,10 +138,10 @@ class Settings(Page):
                     detailed_city_info_frame = Frame(city_info_frame, background = '#222222')
                     detailed_city_info_frame.pack(side='left', fill='y', pady=40)
 
-                    new_city_name = Label(detailed_city_info_frame, background = '#222222', font=(settings_font, 15 ), text=str(cities[0][0]), fg='#00f3c3', width = 25)
+                    new_city_name = Label(detailed_city_info_frame, background = '#222222', font=(settings_font, 15 ), text=str(cities[0][0]), fg=gui_color1, width = 25)
                     new_city_name.pack(fill='x', padx=10)
 
-                    country_name = Label(detailed_city_info_frame, background = '#222222', font=(settings_font, 15 ), text=str(cities[0][1]), fg='#00f3c3')
+                    country_name = Label(detailed_city_info_frame, background = '#222222', font=(settings_font, 15 ), text=str(cities[0][1]), fg=gui_color1)
                     country_name.pack(fill='x', padx=10)
 
                     information = partial(set_city, {'id':str(cities[0][2]), 'name': str(cities[0][0])})
@@ -149,7 +157,7 @@ class Settings(Page):
                     #shift_right = partial(move_right, city_num)
 
                     right_arrow_image = ImageTk.PhotoImage(right_arrow_image)
-                    right_arrow_label = Label(city_info_frame, image=right_arrow_image, background="#00f3c3")
+                    right_arrow_label = Label(city_info_frame, image=right_arrow_image, background=gui_color1)
                     right_arrow_label.bind("<Button-1>", move_right)
                     right_arrow_label.image = right_arrow_image
                     right_arrow_label.pack(side='left', expand=False)
@@ -164,36 +172,48 @@ class Settings(Page):
                         range_label.config(text=(str(i + 1) + " of " + str(len(cities))))
 
         def update_gui(new_color):
-            global gui_color1
-            gui_color1 = new_color
-            global city_num
-            if city_num != 0:
-                global range_label
-                global left_arrow_label
-                global new_city_name
-                global right_arrow_label
-                global country_name
-                range_label.config(fg=gui_color1)
-                left_arrow_label.config(bg=gui_color1)
-                new_city_name.config(fg=gui_color1)
-                country_name.config(fg=gui_color1)
-                right_arrow_label.config(bg=gui_color1)
-            header_frame.config(background=gui_color1)
-            header_label.config(background=gui_color1)
-            search_frame_label.config(fg=gui_color1)
-            color_header_label.config(fg=gui_color1)
+            global OneIsActive
+            global TwoIsActive
+            if OneIsActive:
+                global gui_color1
+                global city_num
+                gui_color1 = new_color
+                if city_num != 0:
+                    global range_label
+                    global left_arrow_label
+                    global new_city_name
+                    global right_arrow_label
+                    global country_name
+                    range_label.config(fg=gui_color1)
+                    new_city_name.config(fg=gui_color1)
+                    country_name.config(fg=gui_color1)
+                gui_color1_label.config(background=gui_color1)
+                header_frame.config(background=gui_color1)
+                header_label.config(background=gui_color1)
+                reset_button.config(fg=gui_color1)
+            if (TwoIsActive):
+                global gui_color2
+                gui_color2 = new_color
+                gui_color2_label.config(background=gui_color2)
+                search_frame_label.config(fg=gui_color2)
+                if city_num != 0:
+                    right_arrow_label.config(bg=gui_color2)
+                    left_arrow_label.config(bg=gui_color2)
+                color_header_label.config(fg=gui_color2)
 
 
-        header_frame = Frame(self, background = '#00f3c3')
+
+
+        header_frame = Frame(self, background = gui_color1)
         header_frame.pack(fill='x', side= "top")
 
-        header_label = Label(header_frame, text="Settings", fg = "#222222", bg="#00f3c3", font=(settings_font, header_size), pady=10)
+        header_label = Label(header_frame, text="Settings", fg = "#222222", bg=gui_color1, font=(settings_font, header_size), pady=8)
         header_label.pack(fill="both", expand=True)
 
         left_search_frame = Frame(self, background = '#222222')
         left_search_frame.pack(fill="both", expand=False, side='left', padx=35, pady=10)
 
-        search_frame_label = Label(left_search_frame, background = '#222222', font=(settings_font, header_size - 5 ), text="Change City", fg='#00f3c3', width = 20)
+        search_frame_label = Label(left_search_frame, background = '#222222', font=(settings_font, header_size - 5 ), text="Change City", fg=gui_color2, width = 20)
         search_frame_label.pack(fill='x', expand=False, side="top", pady=10)
 
         search_box = Entry(left_search_frame, textvariable=text_imput, font= (settings_font, 15 ))
@@ -208,8 +228,9 @@ class Settings(Page):
         color_pick_frame = Frame(self, background = '#222222')
         color_pick_frame.pack(fill="both", expand=True, side='right')
 
-        color_header_label = Label(color_pick_frame, background = '#222222', font=(settings_font, header_size - 5 ), fg=gui_color1, width = 20, text="Change Background Colors")
+        color_header_label = Label(color_pick_frame, background = '#222222', font=(settings_font, header_size - 5 ), fg=gui_color2, width = 20, text="Change Colors")
         color_header_label.pack(fill='x', expand=False, side="top", pady=10)
+
 
         def print_it(event):
             spectrum.delete("first")
@@ -257,10 +278,72 @@ class Settings(Page):
             spectrum.create_oval((spectrum_size_width / 2) - mid_oval_size, (spectrum_size_width / 2) - mid_oval_size,
                                  (spectrum_size_width / 2) + mid_oval_size, (spectrum_size_width / 2) + mid_oval_size, outline="", fill="white", tags=("first"))
 
+
+
         # Spectrum Canvas
+        def one_active(event):
+            global OneIsActive
+            global TwoIsActive
+            OneIsActive = True
+            TwoIsActive = False
+            gui_color1_label.config(relief='sunken')
+            gui_color2_label.config(relief='flat')
+
+        def two_active(event):
+            global OneIsActive
+            global TwoIsActive
+            OneIsActive = False
+            TwoIsActive = True
+            gui_color1_label.config(relief='flat')
+            gui_color2_label.config(relief='sunken')
+
+        def reset_colors(event):
+            global gui_color1
+            global gui_color2
+            gui_color1 = '#00f3c3'
+            gui_color2 = '#00b092'
+            if city_num != 0:
+                global range_label
+                global left_arrow_label
+                global new_city_name
+                global right_arrow_label
+                global country_name
+                range_label.config(fg=gui_color1)
+                left_arrow_label.config(bg=gui_color2)
+                new_city_name.config(fg=gui_color1)
+                country_name.config(fg=gui_color1)
+                right_arrow_label.config(bg=gui_color2)
+            gui_color1_label.config(background=gui_color1)
+            header_frame.config(background=gui_color1)
+            header_label.config(background=gui_color1)
+            search_frame_label.config(fg=gui_color2)
+            color_header_label.config(fg=gui_color2)
+            gui_color2_label.config(background=gui_color2)
+            gui_color1_label.config(relief='sunken')
+            gui_color2_label.config(relief='flat')
+            reset_button.config(fg=gui_color1)
+
+
+
         spectrum = Canvas(color_pick_frame, width=(spectrum_size_width),
                           height=spectrum_size_height, highlightthickness=0, relief='ridge', background="#222222")
         spectrum.pack(expand=True, side="top", padx=10)
+
+        gui_colors_frame = Frame(color_pick_frame, bg='#222222')
+        gui_colors_frame.pack(expand=True, side='top', pady=10, padx=10)
+
+        gui_color1_label = Label(gui_colors_frame, bg=gui_color1, width=10)
+        gui_color1_label.pack(expand=True, side="left", fill='x', padx=5)
+        gui_color1_label.bind("<Button-1>", one_active)
+
+        gui_color2_label = Label(gui_colors_frame, bg=gui_color2, width = 10)
+        gui_color2_label.pack(expand=True, side="left", fill='x', padx=5)
+        gui_color2_label.bind("<Button-1>", two_active)
+
+        reset_button = Label(color_pick_frame, background = '#222222', font=(settings_font, 15 ), fg=gui_color2, width = 17, text="Reset to Defualt")
+        reset_button.pack(expand=True, side='bottom', pady=3, fill='x')
+
+        reset_button.bind("<Button-1>", reset_colors)
 
         global color_combination_dict
         color_combination_dict = {'0': (255, 0, 0),
@@ -1846,8 +1929,35 @@ class Home(Page):
         date = str(time.strftime('%B')) + " " + \
             str(time.strftime('%-d')) + "th, " + str(time.strftime('%Y'))
 
+        def change_gui_color():
+            home_frame.config(bg=gui_color1)
+            header_frame.config(bg=gui_color1)
+            header_left_frame.config(bg=gui_color1)
+            header_right_frame.config(bg=gui_color1)
+            weekday_frame.config(bg=gui_color1)
+            weekday_label.config(bg=gui_color1)
+            month_frame.config(bg=gui_color1)
+            month_label.config(bg=gui_color1)
+            time_frame.config(bg=gui_color1)
+            time_label.config(bg=gui_color1)
+            location_frame.config(bg=gui_color1)
+            location_label.config(bg=gui_color1)
+            weather_label.config(bg=gui_color1)
+            fake_weather_label.config(fg=gui_color1, bg=gui_color1)
+            panel.config(bg=gui_color1)
+            temp_frame.config(bg=gui_color1)
+            temp_label.config(bg=gui_color1)
 
         def check():
+            if (home_frame.cget('bg') != gui_color1):
+                change_gui_color()
+            if (weekday_label.cget('fg') != gui_color2):
+                weekday_label.config(fg=gui_color2)
+                month_label.config(fg=gui_color2)
+                location_label.config(fg=gui_color2)
+                weather_label.config(fg=gui_color2)
+
+
             if location_label.cget('text') != city_name.title():
                 location_label.config(text=city_name.title())
                 day0_info = local_weather(weather_id=city_id, api_key=API_key_real)
@@ -1866,7 +1976,7 @@ class Home(Page):
                     img = img.resize((image_multiple, hsize), Image.ANTIALIAS)
 
                     img = ImageTk.PhotoImage(img)
-                    panel = Label(image_Frame, image=img, background="#00f3c3")
+                    panel = Label(image_Frame, image=img)
                     panel.image = img
                 temp_label.config(text=(str(day0_info.TempInF()) + "°F"))
 
@@ -2035,63 +2145,63 @@ class Home(Page):
         # 222222
 
         # Home Frame
-        home_frame = Frame(self, background="#00f3c3",
+        home_frame = Frame(self, background=gui_color1,
                            width=home_frame_width, height=home_frame_height)
         home_frame.pack(side="top", fill="both", expand=True)
 
         # Header Frame
-        header_frame = Frame(home_frame, background="#00f3c3")
+        header_frame = Frame(home_frame, background=gui_color1)
         header_frame.pack(side="top", fill='both')
 
-        header_left_frame = Frame(header_frame, background="#00f3c3",
+        header_left_frame = Frame(header_frame, background=gui_color1,
                                   width=home_frame_width / 2, height=home_frame_height)
         header_left_frame.pack(side="left", fill="both", expand=True)
 
         header_right_frame = Frame(
-            header_frame, background="#00f3c3", width=home_frame_width / 2, height=home_frame_height)
+            header_frame, background=gui_color1, width=home_frame_width / 2, height=home_frame_height)
         header_right_frame.pack(side="left", fill="both", expand=True)
 
         # Day of the Week
-        weekday_frame = Frame(header_left_frame, background="#00f3c3")
+        weekday_frame = Frame(header_left_frame, background=gui_color1)
         weekday_frame.grid(row=1, column=0, columnspan=1)
 
-        weekday_label = Label(weekday_frame, background="#00f3c3", text=str(
-            weekday), font=(genral_font, weekday_size), fg=secondary_text_color, pady=10)
+        weekday_label = Label(weekday_frame, background=gui_color1, text=str(
+            weekday), font=(genral_font, weekday_size), fg=gui_color2, pady=10)
         weekday_label.pack(side="left", fill="x", expand=True)
 
         # Date Ex) Feburary 11, 2019
-        month_frame = Frame(header_left_frame, background="#00f3c3")
+        month_frame = Frame(header_left_frame, background=gui_color1)
         month_frame.grid(row=2, column=0, columnspan=1)
 
-        month_label = Label(month_frame, background="#00f3c3", text=date, font=(
-            genral_font, month_size), fg=secondary_text_color)
+        month_label = Label(month_frame, background=gui_color1, text=date, font=(
+            genral_font, month_size), fg=gui_color2)
         month_label.pack(side="left", fill="both", expand=True)
 
         # Time
-        time_frame = Frame(header_left_frame, background="#00f3c3")
+        time_frame = Frame(header_left_frame, background=gui_color1)
         time_frame.grid(row=4, column=0, rowspan=2, columnspan=2)
 
-        time_label = Label(time_frame, background="#00f3c3", font=(
+        time_label = Label(time_frame, background=gui_color1, font=(
             genral_font, time_size), fg=primary_text_color, padx=30)
         time_label.pack(side="left", fill="both", expand=True)
 
         # Location
-        location_frame = Frame(header_right_frame, background="#00f3c3")
+        location_frame = Frame(header_right_frame, background=gui_color1)
         location_frame.grid(row=1, column=0, columnspan=1)
 
-        location_label = Label(location_frame, background="#00f3c3", text="Royal Oak", font=(
-            genral_font, location_size), fg=secondary_text_color, pady=5)
+        location_label = Label(location_frame, background=gui_color1, text="Royal Oak", font=(
+            genral_font, location_size), fg=gui_color2, pady=5)
         location_label.pack(side="left", fill="x", expand=True)
 
         # Current detailed weather
-        weather_frame = Frame(header_right_frame, background="#00f3c3")
+        weather_frame = Frame(header_right_frame, background=gui_color1)
         weather_frame.grid(row=2, column=0)
 
-        weather_label = Label(weather_frame, background="#00f3c3", text=(day0_info.DetailedStatus()), font=(genral_font, weather_size), fg=secondary_text_color)
+        weather_label = Label(weather_frame, background=gui_color1, text=(day0_info.DetailedStatus()), font=(genral_font, weather_size), fg=gui_color2)
         weather_label.pack(side="left", fill="both", expand=True)
 
-        fake_weather_label = Label(weather_frame, background="#00f3c3", text="____", font=(
-            genral_font, weather_size), fg="#00f3c3")
+        fake_weather_label = Label(weather_frame, background=gui_color1, text="____", font=(
+            genral_font, weather_size), fg=gui_color1)
         fake_weather_label.pack(side="left", fill="both", expand=True)
 
         # Icon for weather
@@ -2106,19 +2216,19 @@ class Home(Page):
         img1 = img1.resize((image_multiple, hsize), Image.ANTIALIAS)
 
         img = ImageTk.PhotoImage(img1)
-        panel = Label(image_Frame, image=img, background="#00f3c3")
+        panel = Label(image_Frame, image=img, background=gui_color1)
         panel.image = img
         panel.pack()
 
         # Tempature at location
-        temp_frame = Frame(header_right_frame, background="#00f3c3")
+        temp_frame = Frame(header_right_frame, background=gui_color1)
         temp_frame.grid(row=3, column=1, rowspan=2)
 
-        temp_label = Label(temp_frame, background="#00f3c3", text=(str(day0_info.TempInF())) + "°F", font=(genral_font, tempature_size), fg=primary_text_color)
+        temp_label = Label(temp_frame, background=gui_color1, text=(str(day0_info.TempInF())) + "°F", font=(genral_font, tempature_size), fg=primary_text_color)
         temp_label.pack(side="left", fill="both", expand=True)
 
         # Lower Forecast Frame
-        weather_frame = Frame(home_frame, background="white")
+        weather_frame = Frame(home_frame, background=weather_forecast_background)
         weather_frame.pack(side="bottom", fill="both")
 
         # Day 1 Forecast
@@ -2263,14 +2373,14 @@ class MainView(tk.Frame):
         tk.Frame.__init__(self, *args, **kwargs)
 
         def show_settings(event):
-            if settings_label.cget('bg') == "#00b092":
+            if settings_label.cget('bg') == gui_color1:
                 p1.lift()
                 settings_label.config(bg="#222222")
                 settings_frame.config(bg="#222222")
             else:
                 p2.lift()
-                settings_label.config(bg="#00b092")
-                settings_frame.config(bg="#00b092")
+                settings_label.config(bg=gui_color1)
+                settings_frame.config(bg=gui_color1)
 
         p1 = Home(self)
         p2 = Settings(self)
@@ -2313,7 +2423,7 @@ if __name__ == "__main__":
     root.title("Control Center")
     main = MainView(root)
     main.pack(side="top", fill="both", expand=True)
-    root.wm_geometry("800x435")
+    root.wm_geometry("800x475")
     root.mainloop()
 # 572x372
 
