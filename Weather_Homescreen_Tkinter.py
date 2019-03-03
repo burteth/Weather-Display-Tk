@@ -1,18 +1,13 @@
 #!/usr/bin/python3
 # -*- coding: utf8 -*-
-try:
-    import tkinter as tk
-    from tkinter import *
-except ImportError:
-    import Tkinter as tk
-    from Tkinter import *
+from Api_Key import API_KEY
+from tkinter import *
 from PIL import Image, ImageTk
 from webcolors import hex_to_rgb, rgb_to_hex
 from requests import get
 from pyowm import OWM
 from io import BytesIO
 from functools import partial
-from datetime import datetime
 import time
 from math import cos, sin, tan, pi, atan
 from calendar import monthrange
@@ -33,18 +28,10 @@ location_label_name = "Royal Oak"
 OneIsActive = True
 TwoIsActive = False
 
-def set_city(info):
-    global city_id
-    global city_name
-    global location_label_name
-    city_id = int(info['id'])
-    city_name = info['name']
-    location_label_name
-
-class Page(tk.Frame):
+class Page(Frame):
     def __init__(self, *args, **kwargs):
 
-        tk.Frame.__init__(self, *args, **kwargs)
+        Frame.__init__(self, *args, **kwargs)
 
     def show(self):
         self.lift()
@@ -70,6 +57,11 @@ class Settings(Page):
         text_imput = StringVar()
         text_imput.set("City Name")
 
+        def set_city(info):
+            global city_id
+            global city_name
+            city_id = int(info['id'])
+            city_name = info['name']
 
 
         def callback():
@@ -1899,7 +1891,7 @@ class Home(Page):
         roak_weather_id = 5007804
         annarbor_weather_id = 4984247
 
-        API_key_real = '4b89aea78dd85e4582f86b23bc670e98'
+        API_key_real = API_KEY
         genral_font = "Times"
         # Dashboard Text Sizes
         weekday_size = 35
@@ -2368,9 +2360,9 @@ class Home(Page):
         tick()
         check()
 
-class MainView(tk.Frame):
+class MainView(Frame):
     def __init__(self, *args, **kwargs):
-        tk.Frame.__init__(self, *args, **kwargs)
+        Frame.__init__(self, *args, **kwargs)
 
         def show_settings(event):
             if settings_label.cget('bg') == gui_color1:
@@ -2387,8 +2379,8 @@ class MainView(tk.Frame):
 
 
 
-        buttonframe = tk.Frame(self, bg="#222222")
-        container = tk.Frame(self, bg="#222222")
+        buttonframe = Frame(self, bg="#222222")
+        container = Frame(self, bg="#222222")
         buttonframe.pack(side="bottom", fill="x", expand=False)
         container.pack(side="top", fill="both", expand=True)
 
@@ -2419,14 +2411,9 @@ class MainView(tk.Frame):
         p1.show()
 
 if __name__ == "__main__":
-    root = tk.Tk()
+    root = Tk()
     root.title("Control Center")
     main = MainView(root)
     main.pack(side="top", fill="both", expand=True)
     root.wm_geometry("800x475")
     root.mainloop()
-# 572x372
-
-
-# Dashboard Image) https://www.google.com/search?biw=867&bih=645&tbm=isch&sa=1&ei=sOxhXLO1MpL2tAXkzKfwBQ&q=dashboard+icons+transparent+white&oq=dashboard+icons+transparent+white&gs_l=img.3...203067.208129..208373...0.0..0.178.1665.14j2......1....1..gws-wiz-img.DhZNdd3-fvY#imgdii=fP0n7g4yhDrQGM:&imgrc=M9DcngcD3Ps1tM:
-# Light Image) https://previews.123rf.com/images/asmati/asmati1706/asmati170605854/80929914-light-lamp-sign-vector-white-icon-with-soft-shadow-on-transparent-background-.jpg
