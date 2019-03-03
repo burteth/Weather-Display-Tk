@@ -6,7 +6,7 @@ A python GUI made with Tkinter that recieves weather information about any given
 
 ### Installing 
 1. Download the repository 
-2. Run '''pip install -r requirements.txt''' 
+2. Run ```pip install -r requirements.txt```
   to download the required python modules.
   
 ## Built With 
