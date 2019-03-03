@@ -69,7 +69,7 @@ class Settings(Page):
             cities = []
             global country_name
             city_name = text_imput.get()
-            with open('/Users/ethanburt/Desktop/Coding/Weather_Python/weather-display/Weather_IDs.txt', 'rt') as city_list:
+            with open('Weather_IDs.txt', 'rt') as city_list:
                 for line in city_list:
                     local_city_id = ''
                     city_country = ''
