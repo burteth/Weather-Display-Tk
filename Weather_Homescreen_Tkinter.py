@@ -2412,7 +2412,7 @@ class MainView(Frame):
 
 if __name__ == "__main__":
     root = Tk()
-    root.title("Control Center")
+    root.title("Weather Forecast")
     main = MainView(root)
     main.pack(side="top", fill="both", expand=True)
     root.wm_geometry("800x475")
