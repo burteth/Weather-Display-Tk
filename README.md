@@ -2,8 +2,8 @@
 A python GUI made with Tkinter that recieves weather information about any given city from openweathermap API.
 
 ## Screen Shots
-<img src="screenshots/screenshot1.png" alt="Windows Sunshine App Screenshot 1" >  
-<img src="screenshots/screenshot2.png" alt="Windows Sunshine App Screenshot 2" >
+<img src="Screenshots/Screenshot1.png" alt="Screenshot 1" >  
+<img src="Screenshots/Screenshot2.png" alt="Screenshot 2" >
 
 ### Prerequisites
 * Python 3.7
